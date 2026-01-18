@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
-          cache: true
+          #cache: true # no dependencies atm
       # Req 2.1 & Req 2.2: Linter added to pipeline
       - name: Run Linter
         uses: golangci/golangci-lint-action@v9
