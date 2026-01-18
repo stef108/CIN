@@ -22,5 +22,6 @@ updates:
   # Maintain Dockerfile Base Images 
   - package-ecosystem: "docker"
     directory: "/"
+    target-branch: "develop"
     schedule:
       interval: "weekly"
