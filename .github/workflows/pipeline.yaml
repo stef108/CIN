@@ -23,17 +23,17 @@ jobs:
           cache: true
       # Req 2.1 & Req 2.2: Linter added to pipeline
       - name: Run Linter
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v8
         with:
           version: latest
-          args: --timeout=5m
+          args: --timeout=5m --out-format=colored-line-number
 
       # Req 2.1 Unit tests executed in pipeline
       - name: Run Unit Tests
         run: go test ./... -v -coverprofile=coverage.out
 
       # 3.1: Prove code coverage
-      - name: Upload Coverage to Codecov (Optional but Level 3)
+      - name: Upload Coverage to Codecov 
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage.out
