@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 	"sync"
@@ -34,7 +35,9 @@ func ListHandler(cfg config.AppConfig, tpl *template.Template) http.HandlerFunc 
 			Tasks:   tasks,
 		}
 		// Use the passed tpl variable
-		tpl.Execute(w, data)
+		if err := tpl.Execute(w, data); err != nil {
+			http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -105,5 +108,7 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	if _, err := w.Write([]byte("OK")); err != nil {
+		log.Printf("failed to write response: %v", err)
+	}
 }

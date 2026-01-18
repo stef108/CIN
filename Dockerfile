@@ -1,4 +1,4 @@
-FROM golang:1.26rc2-alpine AS builder
+FROM golang:1.25.5-alpine AS builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN go mod download
 
 COPY . .
 
-# CGO_ENABLED=0 creates a statically linked binary (no external C library dependencies)
+# CGO_ENABLED=0 creates a statically linked binary 
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
 FROM alpine:latest
