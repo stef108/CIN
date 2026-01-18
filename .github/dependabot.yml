@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # Maintain GitHub Actions (checkout, setup-go, golangci-lint, etc.)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    # Optional: Groups updates to avoid spamming you with 10 PRs
+    groups:
+       actions:
+         patterns:
+           - "*"
+
+  # Maintain Go Modules (go.mod)
+  - package-ecosystem: "gomod"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+
+  # Maintain Dockerfile Base Images 
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "golang"
