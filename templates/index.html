@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.AppName}}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        .status-TODO { color: #e53935; font-weight: bold; }
+        .status-DONE { color: #43a047; font-weight: bold; text-decoration: line-through; }
+        /* Make buttons smaller to fit in table */
+        button.sm { padding: 0.2rem 0.5rem; font-size: 0.8rem; width: auto; margin-bottom: 0; }
+        .actions { display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <hgroup>
+            <h1>{{.AppName}}</h1>
+            <h2>Running Version: <kbd>{{.Version}}</kbd></h2>
+        </hgroup>
+
+        <article>
+            <form action="/add" method="POST">
+                <div class="grid">
+                    <input type="text" name="title" placeholder="New Feature..." required>
+                    <button type="submit">Add Task</button>
+                </div>
+            </form>
+        </article>
+
+        <section>
+            {{if .Tasks}}
+                <table role="grid">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Feature</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .Tasks}}
+                        <tr>
+                            <td>{{.ID}}</td>
+                            <td>{{.Title}}</td>
+                            <td class="status-{{.Status}}">{{.Status}}</td>
+                            <td>
+                                <div class="actions">
+                                    <form action="/update" method="POST" style="margin:0;">
+                                        <input type="hidden" name="id" value="{{.ID}}">
+                                        <button type="submit" class="sm outline">
+                                            {{if eq .Status "TODO"}}✅ Finish{{else}}⏪ Undo{{end}}
+                                        </button>
+                                    </form>
+
+                                    <form action="/delete" method="POST" style="margin:0;">
+                                        <input type="hidden" name="id" value="{{.ID}}">
+                                        <button type="submit" class="sm outline contrast">🗑️ Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            {{else}}
+                <p>No tasks. System operational.</p>
+            {{end}}
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Ignore Git history
+.git
+.gitignore
+
+# Ignore local build artifacts
+main
+*.exe
+*.test
+
+# Ignore documentation/misc
+README.md
