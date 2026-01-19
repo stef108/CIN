@@ -112,3 +112,47 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("failed to write response: %v", err)
 	}
 }
+
+// LoginPageHandler displays the login page
+func LoginPageHandler(cfg config.AppConfig, tpl *template.Template) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		data := map[string]interface{}{
+			"AppName": cfg.AppName,
+			"Error":   "",
+		}
+		if err := tpl.ExecuteTemplate(w, "login.html", data); err != nil {
+			http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		}
+	}
+}
+
+// LoginHandler processes login form submission (dummy implementation)
+func LoginHandler(cfg config.AppConfig, tpl *template.Template) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+
+		// Dummy authentication - accepts any non-empty credentials
+		if username != "" && password != "" {
+			// TODO: Implement real authentication with database
+			log.Printf("User %s logged in successfully", username)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+
+		// Authentication failed
+		data := map[string]interface{}{
+			"AppName": cfg.AppName,
+			"Error":   "Invalid username or password",
+		}
+		w.WriteHeader(http.StatusUnauthorized)
+		if err := tpl.ExecuteTemplate(w, "login.html", data); err != nil {
+			http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		}
+	}
+}
