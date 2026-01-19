@@ -1,32 +1,37 @@
-linters-settings:
-  revive:
-    rules:
-      # Team Standard 1: Disallow global context/variables (Enforces Dependency Injection)
-      - name: package-comments
-        disabled: true
-      - name: var-declaration
-      - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-
-  wrapcheck:
-    # Team Standard 2: Enforce Error Wrapping 
-    # This forces you to add context to errors returned from external libraries (like SQL/HTTP)
-    ignorePackageSignatures:
-      - .Check(.*)
-
-linters:
-  disable-all: true
-  enable:
-    - errcheck    
-    - gosimple    
-    - govet       
-    - ineffassign 
-    - staticcheck 
-    - revive      
-    - wrapcheck   
-    - gocognit   
+version: 2
 
 run:
   timeout: 5m
+  fix: false
+
+linters-settings:
+  revive:
+    # Standard: Disallow global context/variables to enforce Dependency Injection
+    rules:
+      - name: var-declaration
+      - name: error-return
+      - name: error-strings
+      - name: exported
+        disabled: true
+
+  wrapcheck:
+    # Standard: Enforce Error Wrapping for better production observability
+    ignorePackageSignatures:
+      - .Check(.*)
+
+  gocognit:
+    # Bachelor Requirement: Limit complexity to ensure maintainable code
+    min-complexity: 15
+
+linters:
+  # Start from a clean slate
+  disable-all: true
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - revive      # Team Standard: No globals
+    - wrapcheck   # Team Standard: Error wrapping
+    - gocognit    # Team Standard: Low complexity
