@@ -1,0 +1,33 @@
+version: "2"
+
+run:
+  timeout: 5m
+  go: '1.23' 
+
+linters:
+  enable:
+    - errcheck
+    - ineffassign
+    - staticcheck
+    - revive
+    - wrapcheck
+    - gocognit
+
+  settings:
+    # Standard: Dependency Injection & Anti-Globals
+    revive:
+      rules:
+        - name: var-declaration
+        - name: error-return
+        - name: error-strings
+
+    # Standard: Maintainability (Cognitive Complexity)
+    gocognit:
+      min-complexity: 15
+
+
+    wrapcheck: {}
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
