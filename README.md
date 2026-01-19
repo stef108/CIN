@@ -8,8 +8,9 @@ sequenceDiagram
     participant GA as GitHub Actions
     participant Sonar as SonarCloud
     participant Docker as Docker Engine
+    participant Render as Render (Production)
 
-    Note over Dev, Docker: Continuous Integration & Delivery Pipeline
+    Note over Dev, Render: Continuous Integration & Delivery Pipeline
 
     Dev->>GH: Push Code (git push)
     GH->>GA: Trigger Pipeline (Event: push)
@@ -18,30 +19,40 @@ sequenceDiagram
     rect rgb(240, 248, 255)
         Note right of GA: Job 1: Quality Control
         GA->>GA: Checkout & Setup Go
-        GA->>GA: Run Linter (Team Standards)
+        GA->>GA: Run Linter (golangci-lint)
         GA->>GA: Run Unit Tests (Coverage)
 
         alt Branch is 'main'
-            GA->>Sonar: Execute Static Analysis (Security/Bugs)
+            GA->>Sonar: Execute Static Analysis (Security)
             Sonar-->>GA: Quality Gate Result
         else Branch is 'develop'
             Note right of GA: Skip Sonar (Resource Optimization)
         end
     end
 
-    %% Job 2: Build & Release
+    %% Job 2: Build & Release (Packaging)
     rect rgb(255, 240, 245)
-        Note right of GA: Job 2: Build & Release (Needs Job 1)
+        Note right of GA: Job 2: Build & Release
         
         alt Branch is 'main'
-            GA->>GA: Calculate SemVer (Conventional Commits)
-            GA->>GH: Push Git Tag (e.g., v1.0.1)
-            GA->>Docker: Build Image with Tag (app:v1.0.1)
+            GA->>GA: Calculate SemVer (e.g., v1.0.0)
+            GA->>GH: Push Git Tag
+            GA->>Docker: Build Artifact with Tag
         else Branch is 'develop'
-            GA->>Docker: Build Image with SHA (app:a1b2c3d)
+            GA->>Docker: Build Artifact with SHA
         end
+    end
+
+    %% Job 3: Deployment (The New Part)
+    rect rgb(230, 255, 230)
+        Note right of Render: Job 3: Deployment & Config
         
-        Docker-->>GA: Container Image Ready
+        alt Branch is 'main'
+            GH->>Render: Trigger Auto-Deploy
+            Note right of Render: Configuration Management:<br/>Inject APP_VERSION & PORT<br/>(Decoupled from Code)
+            Render->>Render: Build Docker Container
+            Render-->>Dev: Service Live (Health Check /)
+        end
     end
 ```
 
