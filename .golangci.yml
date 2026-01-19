@@ -1,36 +1,30 @@
-version: "2" 
+version: "2"
 
 run:
   timeout: 5m
 
-linters:
-  enable:
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - wrapcheck   # Team Rule: Enforces error context for database/external calls
-    - revive      
-
-
-issues:
-  exclude-use-default: false
-  max-issues-per-linter: 0
-  max-same-issues: 0
-
+# Standard 1: Top-level settings for our custom team rules
 linters-settings:
-# STANDARD: Dependency Injection & Anti-Globals
-# We disallow certain patterns to ensure the code remains testable and decoupled.
   revive:
     rules:
       - name: var-declaration
       - name: error-return
       - name: error-strings
-
-  # STANDARD: Production Observability (Error Wrapping)
-  # Every error returned from a CRUD operation must be wrapped with context.
-  # This makes debugging logs 10x faster in production.
+  
   wrapcheck:
     ignorePackageSignatures:
       - .Check(.*)
+
+  gocognit:
+    min-complexity: 15
+
+# Standard 2: Explicitly enable the chosen "Level 3" toolset
+linters:
+  enable:
+    - errcheck  
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - revive      # Team standard: Dependency Injection
+    - wrapcheck   # Team standard: Observability
