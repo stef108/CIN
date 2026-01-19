@@ -9,33 +9,39 @@ sequenceDiagram
     participant Sonar as SonarCloud
     participant Docker as Docker Engine
 
-    Note over Dev, Docker: Req 1.2: Auto-trigger on push/PR
+    Note over Dev, Docker: Continuous Integration & Delivery Pipeline
 
     Dev->>GH: Push Code (git push)
-    GH->>GA: Trigger Pipeline
+    GH->>GA: Trigger Pipeline (Event: push)
 
+    %% Job 1: Quality Control
     rect rgb(240, 248, 255)
-        Note right of GA: Job 1: Quality Control (Hardened with SHAs)
-        GA->>GA: Run Linter (Requirement 2.2)
-        GA->>GA: Run Unit Tests (Requirement 2.1)
-        
+        Note right of GA: Job 1: Quality Control
+        GA->>GA: Checkout & Setup Go
+        GA->>GA: Run Linter (Team Standards)
+        GA->>GA: Run Unit Tests (Coverage)
+
         alt Branch is 'main'
-            GA->>Sonar: Execute Static Analysis (Req 2.3)
+            GA->>Sonar: Execute Static Analysis (Security/Bugs)
             Sonar-->>GA: Quality Gate Result
         else Branch is 'develop'
             Note right of GA: Skip Sonar (Resource Optimization)
         end
-
-        alt Any Quality Check Fails
-            GA-->>Dev: Notify Failure (Req 2.1)
-        else All Checks Pass
-            GA->>Docker: Trigger Build Job
-        end
     end
 
+    %% Job 2: Build & Release
     rect rgb(255, 240, 245)
-        Note right of GA: Job 2: Packaging (Requirement 2.4)
-        Docker->>Docker: Build Multi-stage Image
-        Docker-->>GA: Image Ready (devops-app:sha)
+        Note right of GA: Job 2: Build & Release (Needs Job 1)
+        
+        alt Branch is 'main'
+            GA->>GA: Calculate SemVer (Conventional Commits)
+            GA->>GH: Push Git Tag (e.g., v1.0.1)
+            GA->>Docker: Build Image with Tag (app:v1.0.1)
+        else Branch is 'develop'
+            GA->>Docker: Build Image with SHA (app:a1b2c3d)
+        end
+        
+        Docker-->>GA: Container Image Ready
     end
 ```
+
