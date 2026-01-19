@@ -8,18 +8,37 @@
     <style>
         .status-TODO { color: #e53935; font-weight: bold; }
         .status-DONE { color: #43a047; font-weight: bold; text-decoration: line-through; }
-        /* Make buttons smaller to fit in table */
         button.sm { padding: 0.2rem 0.5rem; font-size: 0.8rem; width: auto; margin-bottom: 0; }
         .actions { display: flex; gap: 10px; }
+        
+        /* Dashboard specific styles */
+        .dashboard-card { text-align: center; padding: 20px; }
+        .dashboard-number { font-size: 2.5rem; margin-bottom: 0; font-weight: bold; color: #1095c1; }
     </style>
 </head>
 <body>
     <main class="container">
         <hgroup>
             <h1>{{.AppName}}</h1>
-            <h2>Running Version: <kbd>{{.Version}}</kbd></h2>
+            <h2>Control Panel</h2>
         </hgroup>
 
+        <section>
+            <div class="grid">
+                <article class="dashboard-card">
+                    <header><strong>Active Tickets</strong></header>
+                    <div class="dashboard-number">{{len .Tasks}}</div>
+                </article>
+                <article class="dashboard-card">
+                    <header><strong>System Status</strong></header>
+                    <div class="dashboard-number" style="color: #43a047;">Online 🟢</div>
+                </article>
+                <article class="dashboard-card">
+                    <header><strong>Current Version</strong></header>
+                    <div class="dashboard-number" style="color: #ffb300;">{{.Version}}</div>
+                </article>
+            </div>
+        </section>
         <article>
             <form action="/add" method="POST">
                 <div class="grid">
