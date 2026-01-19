@@ -21,6 +21,8 @@ func main() {
 	http.HandleFunc("/update", handlers.UpdateHandler)
 	http.HandleFunc("/delete", handlers.DeleteHandler)
 	http.HandleFunc("/health", handlers.HealthHandler)
+	http.HandleFunc("/login", handlers.LoginPageHandler(cfg, tpl))
+	http.HandleFunc("/auth/login", handlers.LoginHandler(cfg, tpl))
 
 	// Start Server
 	log.Printf("Starting %s (v%s) on port %s...", cfg.AppName, cfg.Version, cfg.Port)
