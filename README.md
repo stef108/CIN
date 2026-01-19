@@ -1,7 +1,7 @@
 ### 2.3 Pipeline Sequence Diagram
 This diagram illustrates the automated CI/CD flow, satisfying Requirement 2.3.
 
-```
+```mermaid
 sequenceDiagram
     participant Dev as Developer
     participant GH as GitHub Repo
