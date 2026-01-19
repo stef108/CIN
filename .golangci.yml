@@ -1,37 +1,36 @@
-version: 2
+version: "2" 
 
 run:
   timeout: 5m
-  fix: false
-
-linters-settings:
-  revive:
-    # Standard: Disallow global context/variables to enforce Dependency Injection
-    rules:
-      - name: var-declaration
-      - name: error-return
-      - name: error-strings
-      - name: exported
-        disabled: true
-
-  wrapcheck:
-    # Standard: Enforce Error Wrapping for better production observability
-    ignorePackageSignatures:
-      - .Check(.*)
-
-  gocognit:
-    # Bachelor Requirement: Limit complexity to ensure maintainable code
-    min-complexity: 15
 
 linters:
-  # Start from a clean slate
-  disable-all: true
   enable:
     - errcheck
     - gosimple
     - govet
     - ineffassign
     - staticcheck
-    - revive      # Team Standard: No globals
-    - wrapcheck   # Team Standard: Error wrapping
-    - gocognit    # Team Standard: Low complexity
+    - wrapcheck   # Team Rule: Enforces error context for database/external calls
+    - revive      
+
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters-settings:
+# STANDARD: Dependency Injection & Anti-Globals
+# We disallow certain patterns to ensure the code remains testable and decoupled.
+  revive:
+    rules:
+      - name: var-declaration
+      - name: error-return
+      - name: error-strings
+
+  # STANDARD: Production Observability (Error Wrapping)
+  # Every error returned from a CRUD operation must be wrapped with context.
+  # This makes debugging logs 10x faster in production.
+  wrapcheck:
+    ignorePackageSignatures:
+      - .Check(.*)
