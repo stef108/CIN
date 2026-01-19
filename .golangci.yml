@@ -10,11 +10,9 @@ linters-settings:
       - name: var-declaration
       - name: error-return
       - name: error-strings
-  
   wrapcheck:
     ignorePackageSignatures:
       - .Check(.*)
-
   gocognit:
     min-complexity: 15
 
