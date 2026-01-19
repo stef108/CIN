@@ -1,28 +1,39 @@
+# Definitive v2 Configuration
 version: "2"
 
 run:
   timeout: 5m
+  # Requirement 3.1: Ensures consistency across different Go versions
+  go: '1.23' 
 
-# Standard 1: Top-level settings for our custom team rules
-linters-settings:
-  revive:
-    rules:
-      - name: var-declaration
-      - name: error-return
-      - name: error-strings
-  wrapcheck:
-    ignorePackageSignatures:
-      - .Check(.*)
-  gocognit:
-    min-complexity: 15
-
-# Standard 2: Explicitly enable the chosen "Level 3" toolset
 linters:
+  # Enable specific linters as per the team's standard
   enable:
-    - errcheck  
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - revive      # Team standard: Dependency Injection
-    - wrapcheck   # Team standard: Observability
+    - errcheck   
+    - gosimple   
+    - govet       
+    - ineffassign 
+    - staticcheck 
+    - revive      # Team Rule: Used for architectural enforcement
+    - wrapcheck   # Team Rule: Enforces error wrapping for observability
+
+  settings:
+    # STANDARD: Dependency Injection & Anti-Globals
+    # We disallow certain patterns to ensure the code remains testable.
+    revive:
+      rules:
+        - name: var-declaration
+        - name: error-return
+        - name: error-strings
+
+    # STANDARD: Production Observability (Error Wrapping)
+    # Every error from database/external calls must be wrapped with context.
+    wrapcheck:
+      ignorePackageSignatures:
+        - .Check(.*)
+
+
+issues:
+
+  max-issues-per-linter: 0
+  max-same-issues: 0
