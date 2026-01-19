@@ -48,8 +48,20 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
+      - name: Bump version and push tag
+        if: github.ref == 'refs/heads/main'
+        id: tag_version
+        uses: anothrNick/github-tag-action@4ed44965e0db8dab2b466a16da04aec3cc312fd8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
 
-      # Req 2.4: Code is packaged with dependencies using Docker
-      - name: Build Docker Image
-        run: docker build -t devops-app:${{ github.sha }} .
+      # Req 2.4: Code is packaged with dependencies using Docker and tag version
+      - name: Build Docker Image 
+        run: |
+          TAG_NAME=${{ steps.tag_version.outputs.new_tag }}
+          if [ -z "$TAG_NAME" ]; then TAG_NAME=${{ github.sha }}; fi
+          
+          docker build -t devops-app:$TAG_NAME .
 
