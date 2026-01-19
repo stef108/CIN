@@ -35,7 +35,7 @@ jobs:
       # 2.3: Run static analysis scan (Only on main due to sonarcloud free only scanning that)
       - name: SonarCloud Scan
         if: github.ref == 'refs/heads/main'
-        uses: SonarSource/sonarqube-scan-action@a31c939c4d9290072c4533038622b7d44866f281
+        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
