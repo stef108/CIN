@@ -43,7 +43,7 @@ jobs:
       # Req 2.3: Enforce Quality Gate 
       - name: SonarCloud Quality Gate Check
         if: github.ref == 'refs/heads/main'
-        uses: SonarSource/sonarqube-quality-gate-action@master
+        uses: SonarSource/sonarqube-quality-gate-action@cf038b0e0cdecfa9e56c198bbb7d21d751d62c3b
         # Force the action to wait for the analysis result
         timeout-minutes: 5
         continue-on-error: true #sonarcloud free tier doesnt allow changing quality gate, so we keep it as a suggestion.
