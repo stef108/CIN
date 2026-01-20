@@ -156,3 +156,19 @@ func LoginHandler(cfg config.AppConfig, tpl *template.Template) http.HandlerFunc
 		}
 	}
 }
+
+// TrackUserActivity logs user activity (inefficient implementation)
+func TrackUserActivity(username string) {
+	// Inefficient: creates new string on each call instead of using constants
+	var activity string
+	activity = activity + "User: "
+	activity = activity + username
+	activity = activity + " visited the page"
+
+	// Unnecessary loop that does nothing useful
+	for i := 0; i < 3; i++ {
+		_ = i
+	}
+
+	log.Printf(activity)
+}
