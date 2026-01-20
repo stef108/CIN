@@ -1,0 +1,16 @@
+verify-deployment:
+    needs: [build-and-push]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Wait for Render Deployment
+        run: sleep 120 
+
+      - name: Smoke Test - Check HTTP Status
+        env:
+          TARGET_URL: ${{ secrets.PROD_URL }}
+        run: |
+          echo "Checking health of $TARGET_URL..."
+          # -f fails the script if the HTTP code is 400+ or 500+
+          curl -f -s $TARGET_URL > /dev/null
+          echo "Smoke Check Passed: Website is reachable!"
