@@ -28,7 +28,7 @@ jobs:
           version: latest
           args: --timeout=5m
 
-      # Req 2.1 Unit tests executed in pipeline
+      # Req 2.1 Unit tests executed in pipeline HOTFIX
       - name: Run Unit Tests
         run: go test ./... -v -coverprofile=coverage.out
 
