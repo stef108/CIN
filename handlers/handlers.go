@@ -156,3 +156,20 @@ func LoginHandler(cfg config.AppConfig, tpl *template.Template) http.HandlerFunc
 		}
 	}
 }
+
+// TrackingHandler logs user activity (contains bug for demo)
+func TrackingHandler(w http.ResponseWriter, r *http.Request) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	// BUG: trackingData is never defined but we try to use it
+	log.Printf("Tracking user activity: %v", trackingData)
+
+	// This will cause a compile error
+	totalVisits = totalVisits + 1
+
+	w.WriteHeader(http.StatusOK)
+	if _, err := w.Write([]byte("Activity tracked")); err != nil {
+		log.Printf("failed to write response: %v", err)
+	}
+}
