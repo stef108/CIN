@@ -72,8 +72,9 @@ jobs:
           
           docker build -t devops-app:$TAG_NAME .
 
-
+    # Job 3: Verify (Smoke Test)
     verify-deployment:
+      name: Verify Production
       needs: [build]
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/main'
