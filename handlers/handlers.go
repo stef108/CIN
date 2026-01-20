@@ -68,6 +68,7 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Parse the ID from the form
+	//dummy implementation
 	id, _ := strconv.Atoi(r.FormValue("id"))
 
 	mu.Lock()
