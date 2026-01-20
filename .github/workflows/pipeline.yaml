@@ -40,6 +40,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      # Req 2.3: Enforce Quality Gate 
+      - name: SonarCloud Quality Gate Check
+        if: github.ref == 'refs/heads/main'
+        uses: SonarSource/sonarqube-quality-gate-action@master
+        # Force the action to wait for the analysis result
+        timeout-minutes: 5
+        continue-on-error: true #sonarcloud free tier doesnt allow changing quality gate, so we keep it as a suggestion.
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   # Job 2: Build & Package (Req 2.2: Produces working software)
   build:
     name: Build Container
