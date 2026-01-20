@@ -140,7 +140,7 @@ func LoginHandler(cfg config.AppConfig, tpl *template.Template) http.HandlerFunc
 		// Dummy authentication - accepts any non-empty credentials
 		if username != "" && password != "" {
 			// TODO: Implement real authentication with database
-			log.Printf("User %s logged in successfully", username)
+			log.Printf("User logged in successfully")
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
