@@ -42,6 +42,7 @@ func ListHandler(cfg config.AppConfig, tpl *template.Template) http.HandlerFunc 
 }
 
 // AddHandler processes the form submission
+// (dummy implementation)
 func AddHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
